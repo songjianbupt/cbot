@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <ProjectGuid>{45082D43-D7CF-E360-00F8-8482F934F08B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\暴雪游戏\cbot;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Windows\System32;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.26100.0\um\x86;C:\Users\song\Downloads\vcpkg-master\vcpkg-master\installed\x64-windows\lib;$(LibraryPath)</LibraryPath>
+    <LibraryWPath>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.26100.0\um\x86;$(LibraryWPath)</LibraryWPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\暴雪游戏\Dinnerbot;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>C:\Users\song\Downloads\vcpkg-master\vcpkg-master\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 </AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>libcurl.lib;zlib.lib;wininet.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\song\Downloads\vcpkg-master\vcpkg-master\installed\x64-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <ResourceCompile>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="bot\Fishing.cpp" />
+    <ClCompile Include="bot\Gathering.cpp" />
+    <ClCompile Include="bot\Grinder.cpp" />
+    <ClCompile Include="Bot\TbcLfg.cpp" />
+    <ClCompile Include="dialog\Dialog.cpp" />
+    <ClCompile Include="dialog\ObjectList.cpp" />
+    <ClCompile Include="dialog\ObjectWatch.cpp" />
+    <ClCompile Include="dialog\ProfileSettings.cpp" />
+    <ClCompile Include="engine\combat\Action.cpp" />
+    <ClCompile Include="engine\combat\Condition.cpp" />
+    <ClCompile Include="engine\combat\Rotation.cpp" />
+    <ClCompile Include="engine\navigation\ClickToMove.cpp" />
+    <ClCompile Include="engine\navigation\Pathfinding.cpp" />
+    <ClCompile Include="engine\navigation\Walker.cpp" />
+    <ClCompile Include="file\FishingProfile.cpp" />
+    <ClCompile Include="file\NetIO.cpp" />
+    <ClCompile Include="file\Profile.cpp" />
+    <ClCompile Include="game\Game.cpp" />
+    <ClCompile Include="game\Interactions.cpp" />
+    <ClCompile Include="game\Multibox.cpp" />
+    <ClCompile Include="geometry\ConvexCone.cpp" />
+    <ClCompile Include="geometry\Coordinate.cpp" />
+    <ClCompile Include="geometry\Net.cpp" />
+    <ClCompile Include="geometry\Polygon.cpp" />
+    <ClCompile Include="geometry\triangle.cpp" />
+    <ClCompile Include="lib\asmjit\base\assembler.cpp" />
+    <ClCompile Include="lib\asmjit\base\compiler.cpp" />
+    <ClCompile Include="lib\asmjit\base\compilercontext.cpp" />
+    <ClCompile Include="lib\asmjit\base\constpool.cpp" />
+    <ClCompile Include="lib\asmjit\base\containers.cpp" />
+    <ClCompile Include="lib\asmjit\base\cpuinfo.cpp" />
+    <ClCompile Include="lib\asmjit\base\globals.cpp" />
+    <ClCompile Include="lib\asmjit\base\hlstream.cpp" />
+    <ClCompile Include="lib\asmjit\base\logger.cpp" />
+    <ClCompile Include="lib\asmjit\base\operand.cpp" />
+    <ClCompile Include="lib\asmjit\base\podvector.cpp" />
+    <ClCompile Include="lib\asmjit\base\runtime.cpp" />
+    <ClCompile Include="lib\asmjit\base\utils.cpp" />
+    <ClCompile Include="lib\asmjit\base\vmem.cpp" />
+    <ClCompile Include="lib\asmjit\base\zone.cpp" />
+    <ClCompile Include="lib\asmjit\x86\x86assembler.cpp" />
+    <ClCompile Include="lib\asmjit\x86\x86compiler.cpp" />
+    <ClCompile Include="lib\asmjit\x86\x86compilercontext.cpp" />
+    <ClCompile Include="lib\asmjit\x86\x86compilerfunc.cpp" />
+    <ClCompile Include="lib\asmjit\x86\x86inst.cpp" />
+    <ClCompile Include="lib\asmjit\x86\x86operand.cpp" />
+    <ClCompile Include="lib\asmjit\x86\x86operand_regs.cpp" />
+    <ClCompile Include="lib\delaunay\triangulate.cpp" />
+    <ClCompile Include="lib\poly2tri\common\shapes.cc" />
+    <ClCompile Include="lib\poly2tri\sweep\advancing_front.cc" />
+    <ClCompile Include="lib\poly2tri\sweep\cdt.cc" />
+    <ClCompile Include="lib\poly2tri\sweep\sweep.cc" />
+    <ClCompile Include="lib\poly2tri\sweep\sweep_context.cc" />
+    <ClCompile Include="lib\pugixml\pugixml.cpp" />
+    <ClCompile Include="main\Command.cpp" />
+    <ClCompile Include="main\Debug.cpp" />
+    <ClCompile Include="main\Dinnerbot.cpp" />
+    <ClCompile Include="main\Main.cpp" />
+    <ClCompile Include="memory\Bytecode.cpp" />
+    <ClCompile Include="memory\Endscene.cpp" />
+    <ClCompile Include="memory\Hacks.cpp" />
+    <ClCompile Include="memory\Hooks.cpp" />
+    <ClCompile Include="memory\Memory.cpp" />
+    <ClCompile Include="pont\HTML.cpp" />
+    <ClCompile Include="radar\Drawing.cpp" />
+    <ClCompile Include="radar\Edit.cpp" />
+    <ClCompile Include="radar\GraphicsObject.cpp" />
+    <ClCompile Include="radar\NetEditor.cpp" />
+    <ClCompile Include="radar\RenderObject.cpp" />
+    <ClCompile Include="radar\Settings.cpp" />
+    <ClCompile Include="utilities\Thread.cpp" />
+    <ClCompile Include="utilities\Utilities.cpp" />
+    <ClCompile Include="utilities\Wait.cpp" />
+    <ClCompile Include="wow api\Camera.cpp" />
+    <ClCompile Include="wow api\CCharCreateInfo.cpp" />
+    <ClCompile Include="wow api\CDataStore.cpp" />
+    <ClCompile Include="wow api\CGLoot.cpp" />
+    <ClCompile Include="wow api\Chat.cpp" />
+    <ClCompile Include="wow api\CInputControl.cpp" />
+    <ClCompile Include="wow api\ClientDB.cpp" />
+    <ClCompile Include="wow api\Environment.cpp" />
+    <ClCompile Include="wow api\Guild.cpp" />
+    <ClCompile Include="wow api\GuildEntry.cpp" />
+    <ClCompile Include="wow api\Inventory.cpp" />
+    <ClCompile Include="wow api\Lua.cpp" />
+    <ClCompile Include="wow api\Movement.cpp" />
+    <ClCompile Include="wow api\object classes\GameObject.cpp" />
+    <ClCompile Include="wow api\object classes\Item.cpp" />
+    <ClCompile Include="wow api\object classes\Object.cpp" />
+    <ClCompile Include="wow api\object classes\ObjectManager.cpp" />
+    <ClCompile Include="wow api\object classes\Player.cpp" />
+    <ClCompile Include="wow api\object classes\Unit.cpp" />
+    <ClCompile Include="wow api\Spell.cpp" />
+    <ClCompile Include="wow api\Warden.cpp" />
+    <ClCompile Include="wow api\WorldBorders.cpp" />
+    <ClCompile Include="wow api\WoWClientDB.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bot\Fishing.h" />
+    <ClInclude Include="bot\Gathering.h" />
+    <ClInclude Include="bot\Grinder.h" />
+    <ClInclude Include="Bot\TbcLfg.h" />
+    <ClInclude Include="common\Common.h" />
+    <ClInclude Include="common\Geometry.h" />
+    <ClInclude Include="common\Objects.h" />
+    <ClInclude Include="curl\include\libpsl.h" />
+    <ClInclude Include="curl\include\libssh2.h" />
+    <ClInclude Include="curl\include\libssh2_publickey.h" />
+    <ClInclude Include="curl\include\libssh2_sftp.h" />
+    <ClInclude Include="curl\include\zconf.h" />
+    <ClInclude Include="curl\include\zdict.h" />
+    <ClInclude Include="curl\include\zlib.h" />
+    <ClInclude Include="curl\include\zlib_name_mangling.h" />
+    <ClInclude Include="curl\include\zstd.h" />
+    <ClInclude Include="curl\include\zstd_errors.h" />
+    <ClInclude Include="dialog\Dialog.h" />
+    <ClInclude Include="dialog\ObjectList.h" />
+    <ClInclude Include="dialog\ObjectWatch.h" />
+    <ClInclude Include="dialog\ProfileSettings.h" />
+    <ClInclude Include="dialog\resource.h" />
+    <ClInclude Include="Dialog\targetver.h" />
+    <ClInclude Include="engine\combat\Action.h" />
+    <ClInclude Include="engine\combat\Condition.h" />
+    <ClInclude Include="engine\combat\Rotation.h" />
+    <ClInclude Include="engine\navigation\ClickToMove.h" />
+    <ClInclude Include="engine\navigation\Pathfinding.h" />
+    <ClInclude Include="engine\navigation\Walker.h" />
+    <ClInclude Include="file\FishingProfile.h" />
+    <ClInclude Include="file\NetIO.h" />
+    <ClInclude Include="file\Profile.h" />
+    <ClInclude Include="game\Game.h" />
+    <ClInclude Include="game\Interactions.h" />
+    <ClInclude Include="game\Multibox.h" />
+    <ClInclude Include="game\Pointer.h" />
+    <ClInclude Include="game\Variable.h" />
+    <ClInclude Include="geometry\ConvexCone.h" />
+    <ClInclude Include="geometry\Coordinate.h" />
+    <ClInclude Include="geometry\Net.h" />
+    <ClInclude Include="geometry\Polygon.h" />
+    <ClInclude Include="geometry\triangle.h" />
+    <ClInclude Include="geometry\vector2.h" />
+    <ClInclude Include="lib\asmjit\apibegin.h" />
+    <ClInclude Include="lib\asmjit\apiend.h" />
+    <ClInclude Include="lib\asmjit\arm.h" />
+    <ClInclude Include="lib\asmjit\asmjit.h" />
+    <ClInclude Include="lib\asmjit\base.h" />
+    <ClInclude Include="lib\asmjit\base\assembler.h" />
+    <ClInclude Include="lib\asmjit\base\compiler.h" />
+    <ClInclude Include="lib\asmjit\base\compilercontext_p.h" />
+    <ClInclude Include="lib\asmjit\base\compilerfunc.h" />
+    <ClInclude Include="lib\asmjit\base\constpool.h" />
+    <ClInclude Include="lib\asmjit\base\containers.h" />
+    <ClInclude Include="lib\asmjit\base\cpuinfo.h" />
+    <ClInclude Include="lib\asmjit\base\globals.h" />
+    <ClInclude Include="lib\asmjit\base\hlstream.h" />
+    <ClInclude Include="lib\asmjit\base\logger.h" />
+    <ClInclude Include="lib\asmjit\base\operand.h" />
+    <ClInclude Include="lib\asmjit\base\podvector.h" />
+    <ClInclude Include="lib\asmjit\base\runtime.h" />
+    <ClInclude Include="lib\asmjit\base\utils.h" />
+    <ClInclude Include="lib\asmjit\base\vectypes.h" />
+    <ClInclude Include="lib\asmjit\base\vmem.h" />
+    <ClInclude Include="lib\asmjit\base\zone.h" />
+    <ClInclude Include="lib\asmjit\build.h" />
+    <ClInclude Include="lib\asmjit\host.h" />
+    <ClInclude Include="lib\asmjit\x86.h" />
+    <ClInclude Include="lib\asmjit\x86\x86assembler.h" />
+    <ClInclude Include="lib\asmjit\x86\x86compiler.h" />
+    <ClInclude Include="lib\asmjit\x86\x86compilercontext_p.h" />
+    <ClInclude Include="lib\asmjit\x86\x86compilerfunc.h" />
+    <ClInclude Include="lib\asmjit\x86\x86inst.h" />
+    <ClInclude Include="lib\asmjit\x86\x86operand.h" />
+    <ClInclude Include="lib\delaunay\edge.h" />
+    <ClInclude Include="lib\delaunay\triangulate.h" />
+    <ClInclude Include="lib\poly2tri\common\shapes.h" />
+    <ClInclude Include="lib\poly2tri\common\utils.h" />
+    <ClInclude Include="lib\poly2tri\poly2tri.h" />
+    <ClInclude Include="lib\poly2tri\sweep\advancing_front.h" />
+    <ClInclude Include="lib\poly2tri\sweep\cdt.h" />
+    <ClInclude Include="lib\poly2tri\sweep\sweep.h" />
+    <ClInclude Include="lib\poly2tri\sweep\sweep_context.h" />
+    <ClInclude Include="lib\pugixml\pugiconfig.hpp" />
+    <ClInclude Include="lib\pugixml\pugixml.hpp" />
+    <ClInclude Include="main\Command.h" />
+    <ClInclude Include="main\Constants.h" />
+    <ClInclude Include="main\Debug.h" />
+    <ClInclude Include="main\Dinnerbot.h" />
+    <ClInclude Include="main\Main.h" />
+    <ClInclude Include="main\Structures.h" />
+    <ClInclude Include="memory\Bytecode.h" />
+    <ClInclude Include="memory\Endscene.h" />
+    <ClInclude Include="memory\Hacks.h" />
+    <ClInclude Include="memory\Hooks.h" />
+    <ClInclude Include="memory\Memory.h" />
+    <ClInclude Include="pont\HTML.h" />
+    <ClInclude Include="radar\Drawing.h" />
+    <ClInclude Include="radar\Edit.h" />
+    <ClInclude Include="radar\GraphicsObject.h" />
+    <ClInclude Include="radar\NetEditor.h" />
+    <ClInclude Include="radar\RenderObject.h" />
+    <ClInclude Include="radar\Settings.h" />
+    <ClInclude Include="remote\Array.h" />
+    <ClInclude Include="remote\Remote.h" />
+    <ClInclude Include="remote\Vector.h" />
+    <ClInclude Include="utilities\Thread.h" />
+    <ClInclude Include="utilities\Utilities.h" />
+    <ClInclude Include="utilities\Wait.h" />
+    <ClInclude Include="wow api\Camera.h" />
+    <ClInclude Include="wow api\CDataStore.h" />
+    <ClInclude Include="wow api\CGLoot.h" />
+    <ClInclude Include="wow api\Chat.h" />
+    <ClInclude Include="wow api\CInputControl.h" />
+    <ClInclude Include="wow api\ClientDB.h" />
+    <ClInclude Include="wow api\Environment.h" />
+    <ClInclude Include="wow api\Guild.h" />
+    <ClInclude Include="wow api\GuildEntry.h" />
+    <ClInclude Include="wow api\Inventory.h" />
+    <ClInclude Include="wow api\Lua.h" />
+    <ClInclude Include="wow api\Movement.h" />
+    <ClInclude Include="wow api\object classes\GameObject.h" />
+    <ClInclude Include="wow api\object classes\Item.h" />
+    <ClInclude Include="wow api\object classes\Object.h" />
+    <ClInclude Include="wow api\object classes\ObjectManager.h" />
+    <ClInclude Include="wow api\object classes\Player.h" />
+    <ClInclude Include="wow api\object classes\Unit.h" />
+    <ClInclude Include="wow api\Spell.h" />
+    <ClInclude Include="wow api\Warden.h" />
+    <ClInclude Include="wow api\WorldBorders.h" />
+    <ClInclude Include="wow api\WoWClientDB.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="dialog\Dinnerbot.rc">
+      <Culture Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">0x1009</Culture>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/utf-8</AdditionalOptions>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="dialog\Dialog\Images\SETTINGS.ico" />
+    <Image Include="dialog\Dinnerbot.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
