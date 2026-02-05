@@ -1,4 +1,4 @@
-#include "Chat.h"
+﻿#include "Chat.h"
 #include "Lua.h"
 
 #include "Game\Game.h"
@@ -130,6 +130,7 @@ VOID DinnerChat::Setup()
 
 	if (Endscene.CanExecute() /*setupLock.try_lock()*/)
 	{
+		setupLock.try_lock();
 		// Delete any previous instances of DinnerChat.
 		DinnerChat::Destroy();
 
@@ -147,8 +148,8 @@ VOID DinnerChat::Setup()
 
 		setupLock.unlock();
 	}
-	else
-		velog("Unable to execute on endscene");
+	//else
+	//	velog("Unable to execute on endscene");
 
 	//setupLock.unlock();
 	Thread::DeleteCurrent("DinnerChat::Setup");

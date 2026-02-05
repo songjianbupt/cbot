@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Windows.h>
 #include <vector>
@@ -43,6 +43,7 @@ public:
 		// *** Bot Tasks
 		Gathering,
 		Fishing,
+		LFG,
 
 		// *** Engine Tasks
 

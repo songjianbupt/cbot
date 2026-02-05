@@ -1,4 +1,4 @@
-#include "Drawing.h"
+﻿#include "Drawing.h"
 
 #include <algorithm>
 
@@ -361,7 +361,10 @@ VOID Radar::HandleRenderWoWObject(HWND hWnd, HDC hdc, WoWObject *current)
 		object.getName();
 
 		// Convert ASCII to wide byte string.
-		mbstowcs(name, object.name(), 64);
+		//mbstowcs(name, object.name(), 64);
+		int len = MultiByteToWideChar(CP_UTF8, 0, object.name(), -1, NULL, 0);
+		wchar_t name[30];
+		MultiByteToWideChar(CP_UTF8, 0, object.name(), -1, name, len);
 		p = p + center;
 
 		// Offset string for readability.

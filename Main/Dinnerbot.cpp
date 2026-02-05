@@ -1,4 +1,4 @@
-#include "Dinnerbot.h"
+﻿#include "Dinnerbot.h"
 #include "Command.h"
 
 #include <time.h>
@@ -38,6 +38,8 @@
 #include "Dialog\Dialog.h"
 #include "Dialog\ObjectWatch.h"
 #include <CommCtrl.h>
+
+#define UNICODE
 
 BOOL ReleaseMode = false;
 
@@ -372,13 +374,25 @@ VOID onLeavingWorld()
 	SetDlgItemText(g_hwMainWindow, IDC_MAIN_TAB_GROUPBOX_PLAYER, "Not Ingame");
 }
 
+BOOL _CheckInGame()
+{
+	UINT retry_time = 0;
+	BOOL ret;
+	for (; retry_time < 3; retry_time++) {
+		ret = WoW::InGame();
+		if (ret) { return ret; }
+		else { Sleep(1000); continue; }
+	}
+	return ret;
+}
+
 VOID HandleGamestateChange()
 {
 	using namespace Memory;
 	DWORD startTimer = NULL;
 	static BOOL MQ = FALSE;
 
-	if (WoW::InGame())
+	if (_CheckInGame())
 	{
 		if (!MQ) // Player entering world event
 		{
@@ -1105,12 +1119,12 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	InitCommonControls();
 	Dinner::Initialize();
 
-	DialogBoxA(hInstance, MAKEINTRESOURCE(IDD_PROCESS), NULL, (DLGPROC)ProcessListProc);
+	DialogBoxW(hInstance, MAKEINTRESOURCEW(IDD_PROCESS), NULL, (DLGPROC)ProcessListProc);
 
 	if (WoW::handle != NULL)
 	{
 		// Create main dialog.
-		hDlg = CreateDialog(hInstance, MAKEINTRESOURCE(IDD_MAIN), NULL, (DLGPROC)DialogProc);
+		hDlg = CreateDialogW(hInstance, MAKEINTRESOURCEW(IDD_MAIN), NULL, (DLGPROC)DialogProc); 
 		ShowWindow(hDlg, SW_SHOW); 
 
 		// Process dialog messages.

@@ -248,6 +248,7 @@ namespace Memory
 			time += this->Execute(current);
 			this->_stubQueue.pop();
 		}
+		return 0;
 	}
 
 	DWORD CEndscene::Execute(Stub &stub)

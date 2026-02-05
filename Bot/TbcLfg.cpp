@@ -13,8 +13,78 @@
 
 #include <time.h>
 #include <unordered_set>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 DWORD LFGState = LFGSTATE_START;
+
+static char* trim(char* s) {
+	char* end;
+	while (isspace((unsigned char)*s)) s++;
+	if (*s == 0) return s;
+	end = s + strlen(s) - 1;
+	while (end > s && isspace((unsigned char)*end)) end--;
+	end[1] = '\0';
+	return s;
+}
+
+WOWPOS* read_xyz_list(const char* filename, size_t* out_count) {
+	FILE* f = fopen(filename, "r");
+	if (!f) {
+		if (out_count) *out_count = 0;
+		return NULL;
+	}
+
+	size_t cap = 16;
+	size_t count = 0;
+	WOWPOS* arr = (WOWPOS*)malloc(cap * sizeof(WOWPOS));
+	if (!arr) { fclose(f); if (out_count) *out_count = 0; return NULL; }
+
+	char line[1024];
+	while (fgets(line, sizeof(line), f)) {
+		char* p = line;
+		// trim whitespace/newline
+		p = trim(p);
+		if (*p == '\0') continue;
+
+		// split by commas
+		char* tok1 = strtok(p, ",");
+		char* tok2 = tok1 ? strtok(NULL, ",") : NULL;
+		char* tok3 = tok2 ? strtok(NULL, ",") : NULL;
+		char* tok4 = tok3 ? strtok(NULL, ",") : NULL;
+		if (!tok1 || !tok2 || !tok3 || !tok4) continue; // skip malformed lines
+
+		tok1 = trim(tok1); tok2 = trim(tok2); tok3 = trim(tok3); tok4 = trim(tok4);
+
+		char* endptr;
+		float x = strtof(tok1, &endptr);
+		if (endptr == tok1) continue;
+		float y = strtof(tok2, &endptr);
+		if (endptr == tok2) continue;
+		float z = strtof(tok3, &endptr);
+		if (endptr == tok3) continue;
+		float r = strtof(tok4, &endptr);
+		if (endptr == tok4) continue;
+
+		if (count >= cap) {
+			cap *= 2;
+			WOWPOS* tmp = (WOWPOS*)realloc(arr, cap * sizeof(WOWPOS));
+			if (!tmp) break;
+			arr = tmp;
+		}
+		arr[count].X = x;
+		arr[count].Y = y;
+		arr[count].Z = z;
+		arr[count].Null = r;
+		count++;
+	}
+
+	fclose(f);
+	if (out_count) *out_count = count;
+	return arr;
+}
 
 BOOL StartLFG(INT nTimeLimit)
 {
@@ -122,6 +192,25 @@ VOID LFGUpdatePosition()
 	Sleep(20);
 
 	SendKey(' ', WM_KEYUP);
+}
+
+VOID LFGLeaveParty()
+{
+	SendKey('G', WM_KEYDOWN);
+	Sleep(20);
+	SendKey('G', WM_KEYUP);
+}
+
+BOOL CanLFG()
+{
+	UINT retry_time = 0;
+	BOOL ret;
+	for (; retry_time < 3; retry_time++) {
+		ret = LocalPlayer.isAlive() && WoW::InGame();
+		if (ret) { return ret; }
+		else { Sleep(1000); continue; }
+	}
+	return ret;
 }
 
 UINT LFGMoving(UINT nTimeLimit)
@@ -367,12 +456,23 @@ UINT LFGMoving(UINT nTimeLimit)
 	moveType553[14] = 1;
 	INT moveType547[18] = { 0 };
 	moveType547[10] = 1;
-
-	std::unordered_set<int> mapset = { 557, 543, 545, 555, 558, 540, 556, 554, 546, 553, 547 };
+	/*557:法力
+	543:城墙
+	545:地窟
+	555:迷宫
+	558:奥金尼
+	540:PS
+	556:STK
+	554:能源
+	546:沼泽
+	553:生态
+	547:奴隶
+	542:鲜血*/
+	std::unordered_set<int> mapset = { 557, 543, 545, 555, 558, 540, 556, 554, 546, 553, 547, 542 };
 
 	INT curMapID = -3;
 
-	WOWPOS *waypoints = NULL;
+	WOWPOS* waypoints = NULL;
 	INT* movetype = NULL;
 
 	CHAR szBuffer[256], name[256];
@@ -382,100 +482,48 @@ UINT LFGMoving(UINT nTimeLimit)
 	UINT waypointListSize = 0;
 	UINT curWaypointIndex = 0; // current waypoint index.
 	UINT closeWaypointIndex = 0;
-	
+
 	bool flyMode = false;
 	float hackSpeed = 120;
 
-	Thread *currentThread = Thread::GetCurrent();
+	Thread* currentThread = Thread::GetCurrent();
 
-	time_t curTime;
+	time_t startTime;
 	time_t endTime;
-	time(&curTime);
+	time(&startTime);
 
-	
+
 	LFGState = LFGSTATE_START;
 
 	// Setup code so we can call lua ingame.
 	Memory::Endscene.Start();
 
-	sprintf(szBuffer, "LFG set to run for %d minutes", nTimeLimit);
+	sprintf(szBuffer, "LFG set to run for %d minutes, curt :%ll", nTimeLimit, startTime);
 	LogAppend(szBuffer);
 	LogFile(szBuffer);
 
 	srand((UINT)time(NULL));
-	
+
 	Lua::DoString("DinnerDank.start = GetTime()");
 
-	while(currentThread->running())
+	while (currentThread->running())
 	{
-		if (!LocalPlayer.isAlive() || !WoW::InGame()) break;
+		if (!CanLFG()) break;
 
-		if (LocalPlayer.mapId() != curMapID) {
+		if (LocalPlayer.mapId() != curMapID || waypoints == NULL) {
 			curMapID = LocalPlayer.mapId();
-			if (LocalPlayer.mapId() == 557)
-			{
-				waypoints = waypoints557;
-				movetype = moveType557;
-				waypointListSize = sizeof(waypoints557) / sizeof(WOWPOS);
-			}
-			else if (LocalPlayer.mapId() == 543) {
-				waypoints = waypoints543;
-				movetype = moveType543;
-				waypointListSize = sizeof(waypoints543) / sizeof(WOWPOS);
-			}
-			else if (LocalPlayer.mapId() == 545) {
-				waypoints = waypoints545;
-				movetype = moveType545;
-				waypointListSize = sizeof(waypoints545) / sizeof(WOWPOS);
-			}
-			else if (LocalPlayer.mapId() == 555) {
-				waypoints = waypoints555;
-				movetype = moveType555;
-				waypointListSize = sizeof(waypoints555) / sizeof(WOWPOS);
-			}
-			else if (LocalPlayer.mapId() == 558) {
-				waypoints = waypoints558;
-				movetype = moveType558;
-				waypointListSize = sizeof(waypoints558) / sizeof(WOWPOS);
-			}
-			else if (LocalPlayer.mapId() == 540) {
-				waypoints = waypoints540;
-				movetype = moveType540;
-				waypointListSize = sizeof(waypoints540) / sizeof(WOWPOS);
-			}
-			else if (LocalPlayer.mapId() == 556) {
-				waypoints = waypoints556;
-				movetype = moveType556;
-				waypointListSize = sizeof(waypoints556) / sizeof(WOWPOS);
-			}
-			else if (LocalPlayer.mapId() == 554) {
-				waypoints = waypoints554;
-				movetype = moveType554;
-				waypointListSize = sizeof(waypoints554) / sizeof(WOWPOS);
-			}
-			else if (LocalPlayer.mapId() == 546) {
-				waypoints = waypoints546;
-				movetype = moveType546;
-				waypointListSize = sizeof(waypoints546) / sizeof(WOWPOS);
-			}
-			else if (LocalPlayer.mapId() == 553) {
-				waypoints = waypoints553;
-				movetype = moveType553;
-				waypointListSize = sizeof(waypoints553) / sizeof(WOWPOS);
-			}
-			else if (LocalPlayer.mapId() == 547) {
-				waypoints = waypoints547;
-				movetype = moveType547;
-				waypointListSize = sizeof(waypoints547) / sizeof(WOWPOS);
-			}
 
 			if (mapset.find(LocalPlayer.mapId()) != mapset.end()) {
 				// Initialize waypoints and pathing.
+				char filename[15];
+				sprintf_s(filename, "point%d.txt", LocalPlayer.mapId());
+				waypoints = read_xyz_list(filename, &waypointListSize);
 				curWaypointIndex = GetNextClosestWaypoint(waypoints, waypointListSize);
 				LFGState = LFGSTATE_START;
-				time(&curTime);
+				time(&startTime);
+				sprintf_s(szBuffer, "load xyz,cur :%lld", startTime);
+				log(szBuffer);
 			}
-			
 			continue;
 		}
 
@@ -483,6 +531,8 @@ UINT LFGMoving(UINT nTimeLimit)
 			Sleep(300);
 			continue;
 		}
+		sprintf_s(szBuffer, "monitor time :%lld", startTime);
+		log(szBuffer);
 		//closeWaypointIndex = GetNextClosestWaypoint(waypoints, waypointListSize); //TODO 1.cal next index, not close one 2.state change
 
 		if (!Hack::Collision::isM2Enabled())
@@ -491,16 +541,9 @@ UINT LFGMoving(UINT nTimeLimit)
 		}
 
 		float hp = float(LocalPlayer.health()) / float(LocalPlayer.maxHealth());
-		if ( hp < 0.7 && LocalPlayer.inCombat())
+		if (hp < 0.7 && LocalPlayer.inCombat())
 		{
 			LFGState = LFGSTATE_HEAL;
-		}
-
-		if (waypoints[curWaypointIndex].X == 0 && waypoints[curWaypointIndex].Y == 0 && waypoints[curWaypointIndex].Z == 0) {
-			LFGState = LFGSTATE_IDLE;
-		}
-		if (waypoints[curWaypointIndex].X == 1 && waypoints[curWaypointIndex].Y == 1 && waypoints[curWaypointIndex].Z == 1) {
-			LFGState = LFGSTATE_WAIT;
 		}
 		sprintf(szBuffer, "state: %d , index: %d, hp %f", LFGState, curWaypointIndex, hp);
 		log(szBuffer);
@@ -509,10 +552,12 @@ UINT LFGMoving(UINT nTimeLimit)
 		sprintf_s(szBuffer, "distance: %f", dis);
 		log(szBuffer);
 
-		switch(LFGState)
+		UINT t;
+
+		switch (LFGState)
 		{
 		case LFGSTATE_START:
-			
+
 			if (dis > 1)
 			{
 				DWORD action = GetCTMAction();
@@ -521,19 +566,15 @@ UINT LFGMoving(UINT nTimeLimit)
 				LogFile(szBuffer);
 				if (action != 4)
 				{
-					if (movetype[curWaypointIndex] == 0) {
+					if (waypoints[curWaypointIndex].Null != 1) {
 						ClickToMove(waypoints[curWaypointIndex]);
 					}
-					else {
+					else if (waypoints[curWaypointIndex].Null == 1) {
 						Hack::Movement::Teleport(waypoints[curWaypointIndex]); // ** Need to change teleport
 						LFGUpdatePosition();
 					}
-					//LFGState = LFGSTATE_RUNNING;
-					//curWaypointIndex = closeWaypointIndex;
-					
 
 					sprintf_s(szBuffer, "Moving to waypoint %d at (%0.2f, %0.2f, %0.2f)", curWaypointIndex, waypoints[curWaypointIndex].X, waypoints[curWaypointIndex].Y, waypoints[curWaypointIndex].Z);
-
 					log(szBuffer);
 					LogFile(szBuffer);
 
@@ -547,6 +588,10 @@ UINT LFGMoving(UINT nTimeLimit)
 			}
 			else
 			{
+				if (waypoints[curWaypointIndex].Null > 2) {
+					UINT t = UINT(waypoints[curWaypointIndex].Null) * 1000;
+					Sleep(t);
+				}
 				if (curWaypointIndex == waypointListSize - 1)
 				{
 					LFGState = LFGSTATE_END;
@@ -564,57 +609,31 @@ UINT LFGMoving(UINT nTimeLimit)
 			break;
 
 		case LFGSTATE_WAIT:
-			Sleep(3000);
+			t = UINT(waypoints[curWaypointIndex].Null) * 1000;
+			Sleep(t);
 			LFGState = LFGSTATE_START;
-			if (curWaypointIndex == waypointListSize - 1)
-			{
-				LFGState = LFGSTATE_END;
-			}
-			else {
-				curWaypointIndex += 1;
-			}
-			break;
-
-		case LFGSTATE_IDLE:
-			LFGUpdatePosition();
-			if (abs(waypoints[curWaypointIndex].Z - LocalPlayer.pos().Z) > 2)
-			{
-				LFGState = LFGSTATE_START;
-				if (curWaypointIndex == waypointListSize - 1)
-				{
-					LFGState = LFGSTATE_END;
-				}
-				else {
-					curWaypointIndex += 1;
-				}
-			}
 			break;
 
 		case LFGSTATE_END:
 			time(&endTime);
-			std::string& var = Lua::GenerateLocalVariable(10);
-			Lua::vDo(
-				"local isin = IsInLFGDungeon() "
-				"%s = isin == true and 1 or (isin == false and 2 or (isin == nil and 0)) ", var.c_str()
-			);
-			std::string retstr = Lua::GetText(var);
-			sprintf(szBuffer, "drungeon %s ", retstr.c_str());
+			Sleep(1000);
+			sprintf_s(szBuffer, "time diff: %lld", endTime - startTime);
 			log(szBuffer);
-			/*if (endTime - curTime > 120) { //cool down ready
-				Lua::DoString("RunMacroText(\" / script LeaveParty()\")");
+			if (endTime - startTime > 120) { //cool down ready
+				//Lua::DoString("LeaveParty()");
+				LFGLeaveParty();
 				Sleep(3000);
-				Lua::DoString("RunMacroText(\"/invite 七漆骑\")");
-				Sleep(3000);
-				Lua::DoString("/dungeonfinder");
-				Sleep(3000);
-				time(&curTime);
+				time(&startTime);
 				LFGState = LFGSTATE_START;
-				waypoints = NULL;
-			}*/
+				if (waypoints != NULL) { free(waypoints); waypoints = NULL; }
+			}
+			else {
+				TurnToTarget();
+			}
 			Sleep(1000);
 			break;
 		}
-		
+
 		Sleep(300);
 
 	}

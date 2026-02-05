@@ -1,4 +1,4 @@
-#include "ObjectList.h"
+﻿#include "ObjectList.h"
 #include "Resource.h"
 
 #include "Geometry\Coordinate.h"
@@ -16,7 +16,7 @@ HWND RadarDialog;
 HWND TreeView;
 
 TV_ITEM tvi;
-TV_INSERTSTRUCT tvinsert; 
+TV_INSERTSTRUCTW tvinsert; 
 
 HTREEITEM Selected; 
 
@@ -68,10 +68,15 @@ HTREEITEM AddItemToTree(HTREEITEM Parent, HTREEITEM InsertAfter, LPTSTR lpszItem
 { 
 	if (InsertAfter == NULL) InsertAfter = TVI_LAST;
 
+	int len = MultiByteToWideChar(CP_UTF8, 0, lpszItem, -1, NULL, 0);
+	wchar_t name[64];
+	MultiByteToWideChar(CP_UTF8, 0, lpszItem, -1, name, len);
+
 	tvinsert.hParent = Parent;        
 	tvinsert.hInsertAfter = InsertAfter; 
-	tvinsert.item.pszText = lpszItem;
-	return (HTREEITEM)SendDlgItemMessage(RadarDialog, IDC_MAIN_RADAR_TREE_OBJECTS, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
+	tvinsert.item.pszText = LPWSTR(name);
+	return (HTREEITEM)SendDlgItemMessageW(RadarDialog, IDC_MAIN_RADAR_TREE_OBJECTS, TVM_INSERTITEMW, 0, (LPARAM)&tvinsert);
+	//return (HTREEITEM)SendDlgItemMessage(RadarDialog, IDC_MAIN_RADAR_TREE_OBJECTS, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
 } 
 
 INT PopulateObjectList(TVI_Object ObjectsList[500], HTREEITEM Parent, DWORD dwObjectType)
@@ -113,23 +118,26 @@ VOID InitTree(HWND hWnd)
 	tvinsert.hParent = NULL;			
 	tvinsert.hInsertAfter = TVI_ROOT; 
     tvinsert.item.mask = TVIF_TEXT;
-	tvinsert.item.pszText = szBuffer;
-	Objects = (HTREEITEM)SendDlgItemMessage(hWnd, IDC_MAIN_RADAR_TREE_OBJECTS,TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
+	int len = MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, NULL, 0);
+	wchar_t name[64];
+	MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, name, len);
+	tvinsert.item.pszText = name;
+	Objects = (HTREEITEM)SendDlgItemMessageW(hWnd, IDC_MAIN_RADAR_TREE_OBJECTS,TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
 
 	tvinsert.hParent = Objects;         // handle of the above data
 	tvinsert.hInsertAfter = TVI_LAST;  // below parent
-	tvinsert.item.pszText = "Players";
-	Players = (HTREEITEM)SendDlgItemMessage(hWnd, IDC_MAIN_RADAR_TREE_OBJECTS,TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
+	tvinsert.item.pszText = L"Players";
+	Players = (HTREEITEM)SendDlgItemMessageW(hWnd, IDC_MAIN_RADAR_TREE_OBJECTS,TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
 
 	tvinsert.hParent = Objects;         // handle of the above data
 	tvinsert.hInsertAfter = TVI_LAST;  // below parent
-	tvinsert.item.pszText = "Units";
-	Units = (HTREEITEM)SendDlgItemMessage(hWnd, IDC_MAIN_RADAR_TREE_OBJECTS, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);	   
+	tvinsert.item.pszText = L"Units";
+	Units = (HTREEITEM)SendDlgItemMessageW(hWnd, IDC_MAIN_RADAR_TREE_OBJECTS, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);	   
 
 	tvinsert.hParent = Objects;         // handle of the above data
 	tvinsert.hInsertAfter = TVI_LAST;  // below parent
-	tvinsert.item.pszText = "Game Objects";
-	GameObjects = (HTREEITEM)SendDlgItemMessage(hWnd, IDC_MAIN_RADAR_TREE_OBJECTS, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);	   
+	tvinsert.item.pszText = L"Game Objects";
+	GameObjects = (HTREEITEM)SendDlgItemMessageW(hWnd, IDC_MAIN_RADAR_TREE_OBJECTS, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);	   
 }
 
 BOOL IsExpanded(HTREEITEM Item)
@@ -146,6 +154,9 @@ BOOL IsExpanded(HTREEITEM Item)
 VOID ChangeNodeText(HWND hWnd, HTREEITEM Item, CHAR *Text)
 {
 	memset(&tvi, 0, sizeof(tvi));
+	//int len = MultiByteToWideChar(CP_UTF8, 0, Text, -1, NULL, 0);
+	//wchar_t name[30];
+	//MultiByteToWideChar(CP_UTF8, 0, Text, -1, name, len);
 
 	tvi.mask = TVIF_TEXT;
 	tvi.hItem = Item;

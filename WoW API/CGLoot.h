@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <vector>
+#include <iostream>
 
 #include "Object Classes\Object.h"
 

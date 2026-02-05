@@ -162,7 +162,7 @@ namespace Engine
 
 	bool Grinder::_onPull()
 	{
-		CUnit *target = NULL;
+		CUnit target;
 		WOWPOS pullVector;
 
 		std::vector<WOWPOS> path;
@@ -173,13 +173,15 @@ namespace Engine
 			return false;
 		}
 
-		target = &this->_enemies.top();
-		target->update(LocationInfo);
+		target = this->_enemies.top();
+		this->_enemies.pop();
+		target.update(LocationInfo);
+		this->_enemies.push(target);
 
 		// Pathfind-walk to the pull vector.
-		if (this->_pathTo(target->pos()))
+		if (this->_pathTo(target.pos()))
 		{
-			if (_navWait(target, this->_combatDistance))
+			if (_navWait(&target, this->_combatDistance))
 				this->_setState(State::Combat);
 		}
 		else
@@ -237,7 +239,7 @@ namespace Engine
 	// Handle combat
 	bool Grinder::_onCombat()
 	{
-		CUnit *target = NULL;
+		CUnit target;
 
 		// If the local player is not in the net, then return.
 		if (!this->isUnitInNet(&LocalPlayer))
@@ -257,13 +259,16 @@ namespace Engine
 		// Attack each enemy until they are dead.
 		while (this->getState() == State::Combat && !this->_enemies.empty())
 		{
-			target = &this->_enemies.top();
+			target = this->_enemies.top();
+			this->_enemies.pop();
 
 			// If the rotation fails, combat also fails.
-			if (!this->_combatRotate(target)) return false;
-
-			this->_enemiesToLoot.push(*target);
-			this->_enemies.pop();
+			if (!this->_combatRotate(&target)) {
+				this->_enemies.push(target);
+				return false;
+			}
+			this->_enemiesToLoot.push(target);
+			//this->_enemies.pop();
 		}
 
 		// All targets are dead => loot.

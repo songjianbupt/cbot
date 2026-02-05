@@ -18,7 +18,7 @@
 #define FISHING_CASTING_SPELL    0xC85E	// 3.3.5a Tested
 
 // Build Info
-#define WOW_NAME    0x00CABBB8	// 3.3.5a 12340
+#define WOW_NAME    0x009E2A18	// 3.3.5a 12340
 #define BUILD_MAJOR 0x009F5208	// 3.3.5a 12340
 #define BUILD_MINOR 0x009F5200	// 3.3.5a 12340
 #define SUPPORTED_BUILD "World of Warcraft 3.3.5 (12340)"

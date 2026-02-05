@@ -125,7 +125,7 @@ namespace Hack
 
 		bool spectateRender(bool flag)
 		{
-
+			return true;
 		}
 
 		bool Players(bool flag)

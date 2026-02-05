@@ -1,4 +1,4 @@
-#include "Memory.h"
+﻿#include "Memory.h"
 
 #include "Common\Common.h"
 #include "Common\Objects.h"
@@ -1444,10 +1444,17 @@ BOOL AttachWoW()
 
 	// Set WoW's window title to "<player name> (account name) - process ID."
 	sprintf_s(szBuffer, "%s (%s) - %d", LocalPlayer.name(), WoW::GetAccountName().c_str(), pID);
-	SetWindowText(g_hwWoW, szBuffer);
+	int len = MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, NULL, 0);
+	wchar_t name[30];
+	MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, name, len);
+	//SetDlgItemText(hWnd, IDC_MAIN_TAB_GROUPBOX_PLAYER, szBuffer);
+	SetWindowTextW(g_hwWoW, name);
+	//SetWindowText(g_hwWoW, szBuffer);
 
 	SetWindowText(g_hwMainWindow, WoW::GetAccountName().c_str());
-	SetDlgItemText(g_hwMainWindow, IDC_MAIN_TAB_GROUPBOX_PLAYER, LocalPlayer.name());
+	len = MultiByteToWideChar(CP_UTF8, 0, LocalPlayer.name(), -1, NULL, 0);
+	MultiByteToWideChar(CP_UTF8, 0, LocalPlayer.name(), -1, name, len);
+	SetDlgItemTextW(g_hwMainWindow, IDC_MAIN_TAB_GROUPBOX_PLAYER, name);
 
 	if (g_chatLog) LogStatus(true);
 	LogFile(szBuffer);
@@ -2001,6 +2008,7 @@ DWORD GetCurrentManager()
 BOOL GetWoWBuildInfo(CHAR *szBuildReturn, UINT nPID)
 {
 	CHAR szMajor[7], szMinor[7], szWoWName[18];
+	szWoWName[17] = '\0';
 	CHAR szBuffer[MAX_PATH];
 
 	HANDLE hProcess = NULL;
@@ -2061,8 +2069,12 @@ INT PopulateWoWList(HWND hListBox)
 			{
 				sprintf(szBuffer, "%s - %d", szBuffer, pe32.th32ProcessID);
 			}
-			
-			SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)szBuffer);
+			int len = MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, NULL, 0);
+			wchar_t name[30];
+			MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, name, len);
+			//SetDlgItemText(hWnd, IDC_MAIN_TAB_GROUPBOX_PLAYER, szBuffer);
+			SendMessageW(hListBox, LB_ADDSTRING, 0, (LPARAM)name);
+			//SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)szBuffer);
 		}
 	} while (Process32Next(hProcessSnap, &pe32));
 

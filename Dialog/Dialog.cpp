@@ -1,4 +1,4 @@
-#include "Dialog.h"
+﻿#include "Dialog.h"
 #include "Resource.h"
 #include "ObjectList.h"
 
@@ -14,6 +14,7 @@
 
 #include "Bot\Fishing.h"
 #include "Bot\Gathering.h"
+#include "Bot\TbcLfg.h"
 
 #include "Main\Debug.h"
 
@@ -216,6 +217,10 @@ VOID InitTabControl(HWND hWnd)
 	tci.pszText = "Debug";
 	nTabCount = SendDlgItemMessage(hWnd, IDC_MAIN_TAB, TCM_GETITEMCOUNT, 0, 0);
 	SendDlgItemMessage(hWnd, IDC_MAIN_TAB, TCM_INSERTITEM, nTabCount, (LPARAM) (LPTCITEM) &tci);
+
+	tci.pszText = "Farm";
+	nTabCount = SendDlgItemMessage(hWnd, IDC_MAIN_TAB, TCM_GETITEMCOUNT, 0, 0);
+	SendDlgItemMessage(hWnd, IDC_MAIN_TAB, TCM_INSERTITEM, nTabCount, (LPARAM)(LPTCITEM)&tci);
 }
 
 VOID UpdateMainDisplay(HWND hWnd)
@@ -310,7 +315,10 @@ VOID UpdateMainDisplay(HWND hWnd)
 
 		// Update display.
 		sprintf(szBuffer, "Current Target: %s", GetObjectByGUIDEx(CurrentTarget, NameInfo | BaseObjectInfo).Name);
-		SetDlgItemText(hWnd, IDC_MAIN_TAB_STATIC_CURRENTTARGET, szBuffer);
+		int len = MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, NULL, 0);
+		wchar_t name[30];
+		MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, name, len);
+		SetDlgItemTextW(hWnd, IDC_MAIN_TAB_STATIC_CURRENTTARGET, name);
 	}
 }
 
@@ -493,7 +501,10 @@ VOID InitializeOtherControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_MAIN_HACKS_CHECK_LANGUAGEHACK), false);  // Disable the language hack check until further notice.
 	SendDlgItemMessage(hWnd, IDC_MAIN_TAB_EDIT_LOG, WM_SETFONT, (WPARAM)hFont, TRUE);
 	SendDlgItemMessage(hWnd, IDC_MAIN_TAB_EDIT_LOG, EM_LIMITTEXT, 200000, TRUE);
-	SetDlgItemText(hWnd, IDC_MAIN_TAB_GROUPBOX_PLAYER, WoW::GetLocalPlayerName().c_str());
+	int len = MultiByteToWideChar(CP_UTF8, 0, WoW::GetLocalPlayerName().c_str(), -1, NULL, 0);
+	wchar_t name[30];
+	MultiByteToWideChar(CP_UTF8, 0, WoW::GetLocalPlayerName().c_str(), -1, name, len);
+	SetDlgItemTextW(hWnd, IDC_MAIN_TAB_GROUPBOX_PLAYER, name);
 	SetDlgItemText(hWnd, IDC_FISH_TAB_EDIT_TIME, "20");
 	SetDlgItemText(hWnd, IDC_MAIN_HACKS_EDIT_FLY, "7.0");
 	SetDlgItemText(hWnd, IDC_MAIN_HACKS_STATIC_FLY, "100%");
@@ -883,12 +894,20 @@ VOID onObjectWatchButton(HWND hWnd)
 		ShowWindow(CreateDialog(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_OBJECTWATCH), hWnd, (DLGPROC)ObjectWatchProc), SW_SHOW);
 }
 
-VOID onHackerWatchButton()
+VOID onHackerWatchButton(HWND hWnd)
 {
-	if (WoW::InGame() && GetCurrentTargetGUID().low != NULL) 
+	/*if (WoW::InGame() && GetCurrentTargetGUID().low != NULL)
 	{
 		LogAppend("Monitoring target for speed hacks...");
 		//DCreateThread(HackerWatch, NULL, NULL, NULL);
+	}*/
+	if (WoW::InGame()) {
+		if (!StartLFG(100)) {
+			SetDlgItemText(hWnd, IDC_MAIN_TOOLS_BUTTON_HACK_WATCH, "Start LFG");
+		}
+		else {
+			SetDlgItemText(hWnd, IDC_MAIN_TOOLS_BUTTON_HACK_WATCH, "Stop LFG");
+		}
 	}
 }
 
@@ -951,7 +970,11 @@ VOID onChangeProcessButton(HWND hWnd)
 	DialogBox(g_hInst, MAKEINTRESOURCE(IDD_PROCESS), NULL, (DLGPROC)ProcessListProc);
 
 	GetLocalPlayerName(szBuffer);
-	SetDlgItemText(hWnd, IDC_MAIN_TAB_GROUPBOX_PLAYER, szBuffer);
+	int len = MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, NULL, 0);
+	wchar_t name[30];
+	MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, name, len);
+	//SetDlgItemText(hWnd, IDC_MAIN_TAB_GROUPBOX_PLAYER, szBuffer);
+	SetDlgItemTextW(hWnd, IDC_MAIN_TAB_GROUPBOX_PLAYER, name);
 }
 
 VOID onNameFilterCheck(HWND hWnd, WPARAM wParam)
@@ -1505,7 +1528,7 @@ LRESULT CALLBACK DialogProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			
 		case IDC_MAIN_TOOLS_BUTTON_OBJECT_WATCH:		onObjectWatchButton(hWnd);			break;
 
-		case IDC_MAIN_TOOLS_BUTTON_HACK_WATCH:			onHackerWatchButton();				break;
+		case IDC_MAIN_TOOLS_BUTTON_HACK_WATCH:			onHackerWatchButton(hWnd);				break;
 
 		case IDC_MAIN_TOOLS_BUTTON_HIDE_WOW:			onHideWoW();						break;
 

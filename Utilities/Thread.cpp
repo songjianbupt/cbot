@@ -1,4 +1,4 @@
-#include "Thread.h"
+﻿#include "Thread.h"
 #include "Utilities.h"
 
 #include <vector>
@@ -22,13 +22,13 @@ VOID Thread::DeleteCurrent()
 
 VOID Thread::DeleteCurrent(const char *moduleName)
 {
-	vlog("[THREAD]: %s DeleteCurrent()", moduleName);
+	//vlog("[THREAD]: %s DeleteCurrent()", moduleName);
 	Thread::DeleteCurrent();
 }
 
 VOID Thread::Delete(Thread *thread, const char *moduleName)
 {
-	vlog("[THREAD]: %s DeleteCurrent()", moduleName);
+	//vlog("[THREAD]: %s DeleteCurrent()", moduleName);
 	Thread::Delete(thread);
 }
 
