@@ -509,7 +509,8 @@ UINT LFGMoving(UINT nTimeLimit)
 	while (currentThread->running())
 	{
 		if (!CanLFG()) break;
-
+		sprintf_s(szBuffer, "cur map %d, last map %d", LocalPlayer.mapId(), curMapID);
+		log(szBuffer);
 		if (LocalPlayer.mapId() != curMapID || waypoints == NULL) {
 			curMapID = LocalPlayer.mapId();
 
@@ -521,8 +522,6 @@ UINT LFGMoving(UINT nTimeLimit)
 				curWaypointIndex = GetNextClosestWaypoint(waypoints, waypointListSize);
 				LFGState = LFGSTATE_START;
 				time(&startTime);
-				sprintf_s(szBuffer, "load xyz,cur :%lld", startTime);
-				log(szBuffer);
 			}
 			continue;
 		}
@@ -545,12 +544,10 @@ UINT LFGMoving(UINT nTimeLimit)
 		{
 			LFGState = LFGSTATE_HEAL;
 		}
-		sprintf(szBuffer, "state: %d , index: %d, hp %f", LFGState, curWaypointIndex, hp);
+		float dis = GetDistance3D(LocalPlayer.pos(), waypoints[curWaypointIndex]);
+		sprintf(szBuffer, "state: %d , index: %d, hp %f, distance: %f", LFGState, curWaypointIndex, hp, dis);
 		log(szBuffer);
 		LogFile(szBuffer);
-		float dis = GetDistance3D(LocalPlayer.pos(), waypoints[curWaypointIndex]);
-		sprintf_s(szBuffer, "distance: %f", dis);
-		log(szBuffer);
 
 		UINT t;
 
@@ -561,8 +558,8 @@ UINT LFGMoving(UINT nTimeLimit)
 			if (dis > 1)
 			{
 				DWORD action = GetCTMAction();
-				sprintf_s(szBuffer, "action: %d", action);
-				log(szBuffer);
+				//sprintf_s(szBuffer, "action: %d", action);
+				//log(szBuffer);
 				LogFile(szBuffer);
 				if (action != 4)
 				{
