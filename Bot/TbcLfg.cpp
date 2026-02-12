@@ -400,7 +400,7 @@ UINT LFGMoving(UINT nTimeLimit)
 				if (waypoints != NULL) { free(waypoints); waypoints = NULL; }
 				AttachWoW();
 			}
-			else if (endTime - startTime > wait_time - 20) {
+			else {//if (endTime - startTime > wait_time - 50) {
 				TurnToTarget();
 			}
 			Sleep(1000);

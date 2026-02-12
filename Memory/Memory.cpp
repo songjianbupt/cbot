@@ -1443,16 +1443,16 @@ BOOL AttachWoW()
 	SetWindowText(g_hwMainWindow, WoW::GetAccountName().c_str());
 
 	// Set WoW's window title to "<player name> (account name) - process ID."
-	sprintf_s(szBuffer, "%s (%s) - %d", LocalPlayer.name(), WoW::GetAccountName().c_str(), pID);
-	int len = MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, NULL, 0);
+	//sprintf_s(szBuffer, "%s (%s) - %d", LocalPlayer.name(), WoW::GetAccountName().c_str(), pID);
+	//int len = MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, NULL, 0);
 	wchar_t name[30];
-	MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, name, len);
+	//MultiByteToWideChar(CP_UTF8, 0, szBuffer, -1, name, len);
 	//SetDlgItemText(hWnd, IDC_MAIN_TAB_GROUPBOX_PLAYER, szBuffer);
-	SetWindowTextW(g_hwWoW, name);
+	//SetWindowTextW(g_hwWoW, name);
 	//SetWindowText(g_hwWoW, szBuffer);
 
 	SetWindowText(g_hwMainWindow, WoW::GetAccountName().c_str());
-	len = MultiByteToWideChar(CP_UTF8, 0, LocalPlayer.name(), -1, NULL, 0);
+	int len = MultiByteToWideChar(CP_UTF8, 0, LocalPlayer.name(), -1, NULL, 0);
 	MultiByteToWideChar(CP_UTF8, 0, LocalPlayer.name(), -1, name, len);
 	SetDlgItemTextW(g_hwMainWindow, IDC_MAIN_TAB_GROUPBOX_PLAYER, name);
 
